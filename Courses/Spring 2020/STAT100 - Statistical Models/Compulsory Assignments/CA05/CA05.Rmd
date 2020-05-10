@@ -1,0 +1,114 @@
+---
+title: "STAT100 - Compulsory Assignment 05 - Fabio Rodrigues Pereira"
+output: html_notebook
+---
+```{r}
+# Create Variables:
+Unaffected <- c(1.94, 1.44, 1.56, 1.58, 2.06, 1.66, 1.75, 1.77, 1.78, 1.92, 1.25, 1.93, 2.04, 1.62, 2.08)
+Affected <- c(1.27, 1.63, 1.47, 1.39, 1.93, 1.26, 1.71, 1.67, 1.28, 1.85, 1.02, 1.34, 2.02, 1.59, 1.97)
+D <- Unaffected - Affected
+
+# Create data frame with the variables:
+schizophrenia <- data.frame(Unaffected, Affected, D)
+
+# Show dimension and data frame:
+cat("Dimenssion (size, variables): ", dim(schizophrenia))
+cat("\n\n")
+schizophrenia
+
+```
+```{r}
+# Histogram and boxplot together:
+hist(schizophrenia$D, main="Distribuiton of the variable D and its mean (blue) and SD (red) lines:", xlab="Difference in the volumes between Unaffected and Affected individuals", col="grey")
+boxplot(schizophrenia$D,horizontal = TRUE, col="orange",add=TRUE)
+
+# Mean line:
+abline(v=mean(schizophrenia$D), col="blue",lw=2)
+# SD lines:
+abline(v=sd(schizophrenia$D), col="red",lw=2)
+abline(v=-1*sd(schizophrenia$D),col="red",lw=2)
+```
+```{r}
+# Histogram and boxplot together:
+hist(schizophrenia$Unaffected, main="Distribuiton of the variable Unaffected and its mean (blue) and SD (red) lines:", xlab="Volumes of the left hippocampus of the Unaffected individuals", col="grey")
+boxplot(schizophrenia$Unaffected,horizontal = TRUE, col="orange",add=TRUE)
+
+# Mean line:
+abline(v=mean(schizophrenia$Unaffected), col="blue",lw=2)
+# 1*SD lines:
+abline(v=sd(schizophrenia$Unaffected), col="red",lw=2)
+abline(v=-1*sd(schizophrenia$Unaffected),col="red",lw=2)
+```
+```{r}
+# Histogram and boxplot together:
+hist(schizophrenia$Affected, main="Distribuiton of the variable Affected and its mean (blue) and SD (red) lines:", xlab="Volumes of the left hippocampus of the Affected individuals", col="grey")
+boxplot(schizophrenia$Affected,horizontal = TRUE, col="orange",add=TRUE)
+
+# Mean line:
+abline(v=mean(schizophrenia$Affected), col="blue",lw=2)
+# 1*SD lines:
+abline(v=sd(schizophrenia$Affected), col="red",lw=2)
+abline(v=-1*sd(schizophrenia$Affected),col="red",lw=2)
+```
+```{r}
+# Plot combided boxplots between Unaffected and Affected:
+boxplot(schizophrenia$Unaffected, schizophrenia$Affected, horizontal=TRUE)
+```
+```{r}
+# Descriptive Statistics:
+summary(schizophrenia)
+```
+```{r}
+# Variance and size of X:
+var_x <- var(schizophrenia$Unaffected)
+
+# Variance and size of Y:
+var_y <- var(schizophrenia$Affected)
+
+# Spooled variance of D:
+var_d <- var(schizophrenia$D)
+
+# Sample Variance:
+cat("Sample Variance for Unaffected: ", var_x,
+    "\nSample Variance for Affected: ", var_y,
+    "\nSample Variance for pairwised D: ", var_d)
+```
+```{r}
+# Point estimated for Standard Deviation of X:
+nx <- length(schizophrenia$Unaffected)
+std_x <- sqrt(var_x/nx)
+
+# Point estimated for Standard Deviation of Y:
+ny <- length(schizophrenia$Affected)
+std_y <- sqrt(var_y/ny)
+
+# Point estimated for Standard Deviation of pairwised D:
+nd <- length(schizophrenia$D)
+std_d <- sqrt(var_d/nd)
+
+# Sample Standard Deviation:
+cat("Sample Standard Deviation for Unaffected: ", std_x,
+    "\nSample Standard Deviation for Affected: ", std_y,
+    "\nSample Standard Deviation/Error for pairwised D: ", std_d)
+```
+```{r}
+t.test(schizophrenia$Unaffected,schizophrenia$Affected, mu=0, paired=TRUE, var.equal=FALSE, conf.level=0.95)
+```
+```{r}
+# Spooled Variance for not pairwised D:
+var_p = ( (nx-1)*var_x + (ny-1)*var_y ) / (nx + ny - 2)
+
+# Spooled Standard Deviation for not pairwised D:
+std_d = sqrt(var_p) * sqrt( (1/nx) + (1/ny) )
+
+# Sample Standard Deviation:
+cat("Sample Spooled Variance for not pairwised D: ", var_p,
+    "\nSample Standard Deviation/Error for not pairwised D: ", std_d)
+```
+```{r}
+t.test(schizophrenia$Unaffected,schizophrenia$Affected, mu=0, paired=FALSE, var.equal=FALSE)
+```
+```{r}
+-0.1/sqrt((0.6*0.4)/100)
+```
+
