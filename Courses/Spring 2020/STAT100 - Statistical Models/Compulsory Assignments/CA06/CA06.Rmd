@@ -1,0 +1,197 @@
+---
+title: "STAT100 - Compulsory Assignment 06 - Fabio Rodrigues Pereira"
+output: html_notebook
+---
+```{r}
+# Create Variables:
+Swimming <- c(177, 178, 177, 162, 158, 184, 194, 171, 176, 171)
+Running <- c(180, 152, 182, 157, 171, 172, 164, 145, 162, 157)
+CrossCountry <- c(198, 184, 192, 191, 182, 183, 198, 198, 178, 170)
+Wrestling <- c(166, 153, 164, 132, 152, 151, 182, 166, 152, 145)
+
+# Create data frame with the variables:
+volumes <- data.frame(Swimming, Running, CrossCountry, Wrestling)
+
+# Show dimension and data frame:
+cat("Dimenssion (size, groups): ", dim(volumes))
+cat("\n\n")
+volumes
+```
+
+```{r}
+x <- c(1, 2, 6)
+y <- c(2, 4, 6)
+data <- data.frame(x, y)
+```
+
+
+```{r}
+linear_model = lm(data$y~data$x)
+linear_model
+```
+
+
+```{r}
+summary(linear_model)
+```
+```{r}
+anova(linear_model)
+```
+
+
+
+
+
+
+```{r}
+# Exercise 1a):
+
+cat("Y_3_2 := Athlete 2, Soprt 3 (CrossCountry):", volumes[2, 3])
+cat("\nY_2_3 := Athlete 3, Soprt 2 (Running):", volumes[3, 2])
+```
+```{r}
+# Exercise 1d):
+
+cat("Estimate mean for group 1 (Swimming): ", mean(volumes$Swimming),
+    "\nEstimate variance for group 1 (Swimming): ", var(volumes$Swimming),
+    "\nEstimate standard deviation for group 1 (Swimming): ", sd(volumes$Swimming),
+    "\n",
+    "\nEstimate mean for group 2 (Running): ", mean(volumes$Running),
+    "\nEstimate variance for group 2 (Running): ", var(volumes$Running),
+    "\nEstimate standard deviation for group 2 (Running): ", sd(volumes$Running),
+    "\n",
+    "\nEstimate mean for group 3 (CrossCountry): ", mean(volumes$CrossCountry),
+    "\nEstimate variance for group 3 (CrossCountry): ", var(volumes$CrossCountry),
+    "\nEstimate standard deviation for group 3 (CrossCountry): ", sd(volumes$CrossCountry),
+    "\n",
+    "\nEstimate mean for group 4 (Wrestling): ", mean(volumes$Wrestling),
+    "\nEstimate variance for group 4 (Wrestling): ", var(volumes$Wrestling),
+    "\nEstimate standard deviation for group 4 (Wrestling): ", sd(volumes$Wrestling))
+```
+```{r}
+# Exercise 1e):
+
+sports <- stack(volumes)  # or unstack()
+cat("Mean of values: ", mean(sports$values),
+    "\nVariance of values: ", var(sports$values),
+    "\nStandard Deviation of values :", sd(sports$values))
+```
+```{r}
+# Exercise 1f):
+
+boxplot(sports$values~sports$ind)
+```
+```{r}
+# Exercise 1g):
+
+cat("Swimmer (j=7, i=1) has volume: ", volumes[7, 1],
+    "\nSwimming mean: ", mean(volumes$Swimming),
+    "\nResidual of Swimmer 7:", volumes[7, 1] - mean(volumes$Swimming),
+    "\n",
+    "\nWrestler (j=4, i=4) has volume: ", volumes[4, 4],
+    "\nWrestling mean: ", mean(volumes$Wrestling),
+    "\nResidual of Wrestler 4:", volumes[4, 4] - mean(volumes$Wrestling))
+```
+```{r}
+# Exercise 1i):
+
+########### Calculating Explained Sum of Square ESS:
+ESS <- 0
+k <- 4
+
+for (i in 1:k){
+  ESS <- ESS + (nrow(volumes[i]) * ( mean(volumes[ , i]) - mean(sports$values) )^2 )
+}
+
+ESS_df = k-1
+MSF <- ESS/ESS_df
+
+cat("The Explained Sum of Square is ", ESS, "\nThe ESS's degree of freedom is ", ESS_df, 
+    "\nThe Mean Square Factor MSF is ", MSF)
+
+########### Calculating Residual Sum of Square RSS:
+RSS <- 0
+n <- 10
+
+for (i in 1:k){
+  for (j in 1:n){
+    RSS <- RSS + (volumes[j , i] - mean(volumes[ , i]))^2
+  }
+}
+
+RSS_df = k*n - k
+MSE <- RSS/RSS_df
+  
+cat("\n\nThe Residual Sum of Square is ", RSS, "\nThe RSS's degree of freedom is ", RSS_df,
+    "\nThe Mean Square Error MSE is ", MSE)
+
+########### Calculating F-statistic:
+cat("\n\nThe F-Statistic is ", MSF/MSE)
+cat("\n\nThe F_0.05_4_30 = ", qf(0.95, k-1, n*k-k))
+```
+```{r}
+# Exercise 1i):
+
+model <- lm(sports$values~sports$ind)
+anova(model)
+```
+```{r}
+# Exercise 1i):
+
+summary(model)
+```
+```{r}
+# Exercise 3:
+
+KvedeA <- c(12.1, 12.1, 12.4, 11.8, 11.6, 12.4)
+KvedeC <- c(12.7, 12.7, 12.3, 13.8, 12.5, 11.3)
+Pyrodwarf <- c(11.3, 11.2, 12.1, 11.3, 10.8, 11.4)
+Kvedeadams <- c(12.4, 11.5, 11.4, 11.4, 10.8, 11.3)
+
+sugar <- data.frame(KvedeA, KvedeC, Pyrodwarf, Kvedeadams)
+sugar_stack <- stack(sugar)
+
+boxplot(sugar_stack$values~sugar_stack$ind)
+```
+```{r}
+# Exercise 3i):
+
+########### Calculating Explained Sum of Square ESS:
+FSS <- 0
+k <- 4
+n <- 6
+
+for (i in 1:k){
+  FSS <- FSS + (nrow(sugar[i]) * ( mean(sugar[ , i]) - mean(sugar_stack$values) )^2 )
+}
+
+FSS_df = k-1
+MSF <- FSS/FSS_df
+
+cat("The Explained Sum of Square is ", FSS, "\nThe ESS's degree of freedom is ", FSS_df, 
+    "\nThe Mean Square Factor MSF is ", MSF)
+
+########### Calculating Residual Sum of Square RSS:
+RSS <- 0
+
+for (i in 1:k){
+  for (j in 1:n){
+    RSS <- RSS + (sugar[j , i] - mean(sugar[ , i]))^2
+  }
+}
+
+RSS_df = k*n - k
+MSE <- RSS/RSS_df
+  
+cat("\n\nThe Residual Sum of Square is ", RSS, "\nThe RSS's degree of freedom is ", RSS_df,
+    "\nThe Mean Square Error MSE is ", MSE)
+
+########### Calculating F-statistic:
+cat("\n\nThe F-Statistic is ", MSF/MSE)
+cat("\n\nThe F_0.05_4_6 = ", qf(0.95, 4, 6))
+```
+```{r}
+model <- lm(sugar_stack$values~sugar_stack$ind)
+anova(model)
+```
+

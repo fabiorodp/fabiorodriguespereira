@@ -1,0 +1,48 @@
+```{r}
+svarte_paa_evaluering <- c(rep("Nei",82),rep("Ja",133))
+personlighetstyper <- c(rep("CE",22),rep("CI",20),rep("DE",19),rep("DI",21), 
+                        rep("CE",25),rep("CI",32),rep("DE",25),rep("DI",51))
+
+contingencytable2 <- table(svarte_paa_evaluering,personlighetstyper)
+contingencytable2
+```
+```{r}
+barplot(contingencytable2, beside=TRUE, xlab="Personlighetstype", ylab="Antall svar",
+        legend=rownames(contingencytable2))
+```
+```{r}
+chisq_analisis <- chisq.test(contingencytable2, correct = FALSE)
+chisq_analisis
+```
+```{r}
+cat("Test statistic chi squared with 95% security and df3: ", qchisq(p = 0.95, df = 3))
+```
+```{r}
+# The number of observations:
+contingencytable2
+
+# The expected number of responses:
+chisq_analisis$expected
+```
+
+```{r}
+# The contribution to the test statistic:
+((contingencytable2-chisq_analisis$expected)^2)/chisq_analisis$expected
+```
+```{r}
+# 2G)
+gruppeprosess <- c(rep("yes",120),rep("no",80))
+personlighetstyper <- c(rep("g",80),rep("k",40),rep("g", 20),rep("k",60))
+contingencytable3 <- table(gruppeprosess,personlighetstyper)
+contingencytable3
+
+# Er det signifikant effekt av personlighet paa hvor godt studentene oppfattet at statistikkgruppen sin fungerte?
+chisq.test(contingencytable3)
+
+# Forventede verdier
+min_tabellanalyse3 <- chisq.test(contingencytable3)
+min_tabellanalyse3$expected
+
+# Chi-square verdier:
+((contingencytable3-min_tabellanalyse3$expected)^2)/min_tabellanalyse3$expected
+```

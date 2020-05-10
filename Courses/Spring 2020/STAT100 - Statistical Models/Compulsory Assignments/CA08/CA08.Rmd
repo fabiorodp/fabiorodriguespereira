@@ -1,0 +1,141 @@
+---
+title: "STAT100 - Compulsory Assignment 08 - Fabio Rodrigues Pereira"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+# OPPGAVE 1 
+# Last ned og last inn beerf via Import Dataset -> From Excel...
+```{r}
+# Reads data from excel:
+library(readxl)
+bildatafil <- read_excel("~/Google Drive/Estudos/V20/STAT100/CA08/bildatafil.xlsx")
+bildatafil_stacked <- stack(bildatafil)
+```
+```{r}
+summary(bildatafil)
+```
+```{r}
+hist(bildatafil$alder)
+```
+```{r}
+hist(bildatafil$km)
+```
+```{r}
+hist(bildatafil$pris)
+```
+# Kommenter med en setning det du ser:
+# -> Irregular and not symmetrical histogram plots.
+
+```{r}
+# B)
+# ... og aa plotte sammenhengen mellom dem:
+plot(bildatafil$km,bildatafil$pris, pch=16)
+```
+
+```{r}
+#### Exercise 1c)
+n <- 10
+km_mean <- mean(bildatafil$km)
+pris_mean <- mean(bildatafil$pris)
+covariance_xy <- 0
+variance_x <- 0
+
+# Least square technique:
+for (i in 1:n){
+    covariance_xy <- covariance_xy + ((bildatafil$pris[i] - pris_mean) * (bildatafil$km[i] - km_mean)) / (n-1)
+    variance_x <- variance_x + ( (bildatafil$km[i] - km_mean)^2) / (n-1)
+}
+
+beta <- covariance_xy/variance_x
+alpha <- pris_mean-(beta*km_mean)
+
+# Regression sum of squares:
+RSS <- 0
+for (i in 1:n){
+    RSS <- RSS + ( ( alpha + (beta * bildatafil$km[i]) ) - pris_mean )^2
+}
+
+# Error sum of squares:
+ESS <- 0
+for (i in 1:n){
+    ESS <- ESS + ( bildatafil$pris[i] - ( alpha + (beta * bildatafil$km[i]) ) )^2
+}
+
+# Total sum of squares:
+TSS <- RSS + ESS
+
+# How good is the regression?
+r_square <- RSS / TSS
+
+# Variance estimate for pris:
+MSE = ESS / n-2
+
+# Residual standard error:
+residual_standard_error = sqrt(MSE)
+
+# Standard Error for beta:
+X_SS <- 0
+for (i in 1:n){
+    X_SS <- X_SS + (bildatafil$km[i] - km_mean)^2
+}
+
+SE_beta = sqrt(MSE/X_SS)
+
+# Standard Error for estimate Y_i:
+X_SS <- 0
+for (i in 1:n){
+    X_SS <- X_SS + (bildatafil$km[i] - km_mean)^2
+}
+
+SE_beta = sqrt(MSE/X_SS)
+```
+
+```{r}
+#### Exercise 1c)
+linear_model_1 = lm(bildatafil$pris~bildatafil$km)
+linear_model_1
+```
+```{r}
+summary(linear_model_1)
+```
+```{r}
+#### Exercise 1d)
+plot(bildatafil$km,bildatafil$pris, pch=16)
+abline(linear_model_1)
+```
+```{r}
+# Residualene er de estimerte feil-leddene og beregnes ogsaa i lm-analysen. 
+# Du finner deskriptiv statistikk for residualene i utskriften fra:
+summary(linear_model_1)
+```
+```{r}
+# Alternativt kan du ogsaa beregne dette slik:
+summary(linear_model_1$residuals)
+```
+```{r}
+# Sjekk at du faar det samme. 
+# Hvilken verdi har gjennomsnittet for residualene? Hvorfor? 
+# Lag et histogram for residualene (hvilken fordeling boer det se ut som?)
+hist(linear_model_1$residuals)
+```
+```{r}
+# Er sigma lik i hele observasjonsomraadet? Det kan vi for eksempel sjekke 
+# ved aa plotte residualene mot den estimerte responsen (y_hatt):
+plot(linear_model_1$fitted.values, linear_model_1$residuals, pch=16)
+abline(h=0)
+```
+```{r}
+-0.41*0.0060
+```
+
+```{r}
+#### Exercise 1g)
+linear_model_2 = lm(bildatafil$pris~bildatafil$alder)
+summary(linear_model_2)
+```
+```{r}
+#### Exercise 1g)
+linear_model_3 = lm(bildatafil$pris~bildatafil$alder+bildatafil$km)
+summary(linear_model_3)
+```
