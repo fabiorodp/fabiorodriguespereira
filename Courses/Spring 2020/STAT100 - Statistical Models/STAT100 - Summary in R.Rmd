@@ -1,0 +1,127 @@
+---
+Summary of R codes for the course STAT100 at NMBU:
+---
+
+```{r}
+# Read data from excel:
+library(readxl)
+data_xl <- read_excel("table.xlsx")
+
+# Fraquency table of a variable:
+frequency <- table(data_xl)
+
+# Relative fraquency table of a variable:
+relative_frequency <- prop.table(data_xl)
+relative_frequency
+
+# Number of rows:
+nrow(data_xl)
+
+# Summary of the data:
+summary(data_xl)
+```
+
+#The Normal distribution:
+https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/Normal
+
+```{r}
+pop_mean = 1010
+pop_std = 10
+
+# The quantile function (z-score):
+z_score <- qnorm(p=0.05, mean=0, sd=1, lower.tail=TRUE)
+cat('z-score:', z_score)
+
+# Proportion of z-score: lower.tail=TRUE: P(Z<=z) or lower.tail=FALSE:P(Z>z):
+# The distribution function:
+prop_z_score <- pnorm(q=z_score, mean=0, sd=1, lower.tail=TRUE)
+cat('\nProportion of z-score:', prop_z_score)
+
+# Limit k:
+# z-score <- (k - pop.mean) / pop.std
+k <- z_score * pop_std + pop_mean
+cat('\nConversion and limit k:', k)
+```
+
+# The Binomial Distribution:
+https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/Binomial
+
+```{r}
+pop_size = 10        # n
+pop_prob = 0.1357    # sucess probability: p_hat = #X/n
+
+# Convert binom(n,p) ~ nom(pop_mean, pop_std):
+pop_mean <- pop_size*pop_prob                    # Expected value: n*p
+pop_std <- sqrt(pop_size*pop_prob*(1-pop_prob))  # Standard deviation: sqrt(n*p(1-p))
+```
+
+# The t-student distribution:
+https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/TDist
+
+```{r}
+dt(x, df, ncp)
+pt(q, df, ncp, lower.tail = TRUE)
+qt(p, df, ncp, lower.tail = TRUE)
+rt(n, df, ncp)
+```
+
+# Variance Analysis - F-distribution:
+https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/FDist
+
+```{r}
+df(x, df1, df2, ncp, log = FALSE)
+pf(q, df1, df2, ncp, lower.tail = TRUE)
+qf(p, df1, df2, ncp, lower.tail = TRUE)
+rf(n, df1, df2, ncp)
+
+# Define model:
+model <- lm(Y~X)
+
+# Variance analysis:
+ANOVA(formula=model)
+```
+
+# Regression Analysis:
+
+```{r}
+# Regression Analysis:
+
+
+```
+
+# Chi squared distribution:
+https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/Chisquare
+
+```{r}
+# Dependency analysis:
+
+# Create a contingency table:
+X <- c(rep("No", 82), rep("Yes", 133))
+Y <- c(rep("CE", 22), rep("CI", 20), rep("DE",19), rep("DI", 21),  # No
+       rep("CE", 25), rep("CI", 32), rep("DE",25), rep("DI", 51))  # Yes
+
+contingency <- table(X, Y)
+
+barplot(contingency, beside=TRUE, xlab="X", ylab="Y", legend=rownames(contingency))
+
+chisq_test <- chisq.test(contingency, correct=FALSE)
+
+summary(contingency)
+cat("\n")
+
+summary(chisq_test)
+chisq_test
+
+df <- 3  # k-1
+alpha <- 0.95  # Security level ?
+cat("\n", "Chisq quantile:", qchisq(p=alpha, df=df), "\n")
+cat("\n", "Chisq probability:", pchisq(q=7.814728, df=df), "\n")
+
+# Print E_i_j (expected contingency):
+cat("\n", "Expected Contingency (E_i_j) table: ", "\n")
+chisq_test$expected
+
+# Print Q_i_j (contribution):
+cat("\n", "Contribution (Q_i_j) table:", "\n")
+(chisq_test$observed - chisq_test$expected)^2 / chisq_test$expected
+```
