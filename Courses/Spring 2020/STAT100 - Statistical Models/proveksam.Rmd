@@ -1,9 +1,55 @@
 ---
-Prøveksam for the course STAT100 at NMBU:
+Proveksam for the course STAT100 at NMBU:
 ---
 
 ```{r}
+A <- c(212, 210, 217, 205, 212, 201, 238, 225, 219, 198)
+B <- c(202, 198, 190, 195, 205, 216, 220, 214, 206, 188)
 
+# Pairwised degrees of freedom:  # 'two.sided', 'greater' or 'less'
+t.test(A, B, mu=0, alternative='greater', paired=TRUE, var.equal=TRUE, conf.level=0.9)
+```
+
+```{r}
+prop_z_score <- pnorm(q=2.52, 0, 1, lower.tail=TRUE)
+cat('\nProportion of z-score:', prop_z_score)
+```
+
+```{r}
+# Dependency analysis:
+
+# Create a contingency table:
+X <- c(rep("Industri", 41), rep("Bygg", 29), rep("Vare", 79), rep("Info", 33))
+Y <- c(rep("leder", 19), rep("kontor", 17), rep("salg", 5),
+       rep("leder", 14), rep("kontor", 10), rep("salg", 5),
+       rep("leder", 13), rep("kontor", 10), rep("salg", 56),
+       rep("leder", 18), rep("kontor", 11), rep("salg", 4))
+
+contingency <- table(X, Y)
+contingency
+
+chisq_test <- chisq.test(contingency, correct=FALSE)
+
+# summary(chisq_test)
+
+chisq_test
+```
+```{r}
+qchisq(p=0.01, df=6, lower.tail=FALSE)
+```
+```{r}
+chisq_test$expected
+round((chisq_test$observed-chisq_test$expected)/chisq_test$expected,2)
+```
+```{r}
+13*( (29.47-27.83)^2+(30.86-27.83)^2+(23.15-27.83)^2 )
+```
+```{r}
+# P(syk|positive hba1c) = ?
+0.75*0.08/( 0.75*0.08+0.16*0.92)
+```
+```{r}
+pt(q=0.37/0.365, df=39, lower.tail=FALSE)
 ```
 
 

@@ -230,13 +230,14 @@ chisq_test <- chisq.test(contingency, correct=FALSE)
 summary(contingency)
 cat("\n")
 
-summary(chisq_test)
+# summary(chisq_test)
 chisq_test
-
-df <- 3  # k-1
-alpha <- 0.95  # Security level ?
-cat("\n", "Chisq quantile:", qchisq(p=alpha, df=df), "\n")
-cat("\n", "Chisq probability:", pchisq(q=7.814728, df=df), "\n")
+```
+```{r}
+df <- 3  # (n-1)(k-1)
+alpha <- 0.05  # Security level alpha
+cat("\n", "Chisq quantile:", qchisq(p=alpha, df=df, lower.tail=FALSE), "\n")
+cat("\n", "Chisq probability:", pchisq(q=chisq_test$statistic, df=df, lower.tail=FALSE), "\n")
 
 # Print E_i_j (expected contingency):
 cat("\n", "Expected Contingency (E_i_j) table: ", "\n")
@@ -246,3 +247,4 @@ chisq_test$expected
 cat("\n", "Contribution (Q_i_j) table:", "\n")
 (chisq_test$observed - chisq_test$expected)^2 / chisq_test$expected
 ```
+
