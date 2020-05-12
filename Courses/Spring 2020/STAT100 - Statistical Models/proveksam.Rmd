@@ -1,0 +1,13 @@
+---
+Prøveksam for the course STAT100 at NMBU:
+---
+
+```{r}
+
+```
+
+
+
+
+
+
