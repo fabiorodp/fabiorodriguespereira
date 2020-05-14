@@ -31,6 +31,11 @@ frequency <- table(data_xl)
 #The Normal distribution:
 https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/Normal
 
+dnorm(x, mean = 0, sd = 1, log = FALSE)
+pnorm(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
+qnorm(p, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE)
+rnorm(n, mean = 0, sd = 1)
+
 ```{r}
 pop_mean = 1010
 pop_std = 10
@@ -52,6 +57,13 @@ cat('\nConversion and limit k:', k)
 
 # The Binomial Distribution:
 https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/Binomial
+
+dbinom(x, size, prob, log = FALSE)
+pbinom(q, size, prob, lower.tail = TRUE, log.p = FALSE)
+qbinom(p, size, prob, lower.tail = TRUE, log.p = FALSE)
+rbinom(n, size, prob)
+
+lower.tail:= if TRUE (default), probabilities are P[X???x], otherwise, P[X>x].
 
 ```{r}
 pop_size = 10        # n

@@ -1,0 +1,8 @@
+---
+title: "STAT100 at NMBU - Eksam"
+output: html_notebook
+---
+```{r}
+
+```
+

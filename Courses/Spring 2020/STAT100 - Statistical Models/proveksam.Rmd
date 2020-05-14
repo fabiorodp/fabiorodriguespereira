@@ -51,6 +51,15 @@ round((chisq_test$observed-chisq_test$expected)/chisq_test$expected,2)
 ```{r}
 pt(q=0.37/0.365, df=39, lower.tail=FALSE)
 ```
+```{r}
+pbinom(q=1, size=10, prob=0.2, lower.tail = TRUE, log.p = FALSE)
+```
+```{r}
+pnorm(q=7.1, mean = 6, sd = 0.8, lower.tail = FALSE, log.p = FALSE)
+```
+```{r}
+((1.5-1.7)^2+(1.6-1.7)^2+(1.8-1.7)^2+(1.9-1.7)^2)/3
+```
 
 
 
