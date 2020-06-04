@@ -1,0 +1,6 @@
+Impurity measures for decisiont trees
+=====================================
+
+- Try to reproduce the plot in Ch03 - page 96, 3rd edition) that we also discussed in lecture
+- The solution is in our textbook (Ch03 - page 65, 3rd Edition)
+- Try to implement as much as possible on your own without consulting the solution too much

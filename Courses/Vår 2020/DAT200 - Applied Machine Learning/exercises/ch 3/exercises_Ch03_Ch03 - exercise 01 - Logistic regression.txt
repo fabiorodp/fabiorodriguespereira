@@ -1,0 +1,6 @@
+Logistic regression
+===================
+
+- Try to implement the logistic regression classifier (in a object oriented API)
+- The solution is the logistic regression class in our textbook (Ch03 - page 68, 3rd Edition) that we also discussed in the lecture
+- Try to implement as much as possible on your own without consulting the solution too much

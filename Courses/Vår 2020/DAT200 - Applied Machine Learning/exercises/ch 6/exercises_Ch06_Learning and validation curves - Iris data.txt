@@ -1,0 +1,7 @@
+Iris data
+
+1. Compute learning and validation curves using the StandardScaler and Logistic Regression with L2-regularization. 
+2. Repeat the learning curve for a good choice of the L2 parameter and check if it has changed.
+
+Tip 1: learning_curve fails using the original sample order of the Iris data
+Tip 2: Named steps in a pipeline can be accessed using .named_steps['mystep'] and their parameters changed using .set_params(param_name=param_value)

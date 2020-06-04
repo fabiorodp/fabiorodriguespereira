@@ -1,0 +1,11 @@
+Use the MNIST data of hand-written digits from: https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_digits.html
+
+Cluster the first 1000 digits using 2-100 clusters and K-means/Fuzzy c-means.
+
+Monitor the development of the distortion as you vary the number of clusters,
+and inspect the purity of the clusters 
+(proportion of most common digit, e.g. through scipy.stats.mode).
+Plot relative distortions (divide by first/highest value) and purity together.
+
+Bonus: Create a cluster-based classifier from the "best" clustering and assess its
+performance on the remaining digits.

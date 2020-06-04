@@ -1,0 +1,172 @@
+---
+title: "Additional Exercise 5"
+author: "Jonas Moss"
+date: "September 20, 2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+First we load the data:
+```{r data, cache = TRUE}
+beetle = read.table(file = "http://www.stat.ufl.edu/~aa/glm/data/Beetles2.dat",
+                    header = TRUE)
+```
+
+# A quadratic logit model
+Linear and quadratic logistic regressions can be fitted by doing this.
+
+```{r quadratic logit model, cache = TRUE}
+
+glm(formula = cbind(dead, n - dead) ~ logdose,
+    family = binomial(link = logit),
+    data = beetle) ->
+  linear_logit
+
+glm(formula = cbind(dead, n - dead) ~ logdose + I(logdose^2),
+    family = binomial(link = logit),
+    data = beetle) ->
+  quadratic_logit
+```
+
+These can be ploted with the predict function:
+
+```{r quadratic logit model plot, cache = TRUE}
+
+plot(x    = exp(beetle$logdose),
+     y    = exp(predict(quadratic_logit))/(1 + exp(predict(quadratic_logit))), 
+     type = "b", 
+     col  = "blue", 
+     bty  = "l",
+     ylim = c(0, 1),
+     pch  = c(20),
+     lwd  = 1.1,
+     xlab = "Dose, log scale",
+     ylab = "Probability of Death",
+     main = "Two logistic models",
+     log  = "x")
+
+lines(x    = exp(beetle$logdose),
+      y    = exp(predict(linear_logit))/(1 + exp(predict(linear_logit))), 
+      type = "b", 
+      lwd  = 1.1,
+      pch  = c(20),
+      col  = "red")
+
+legend(x = "topleft", 
+       legend = c("Linear model", "Quadratic model"),
+       lty = c(1, 1),
+       pch = c(20, 20),
+       col = c("red", "blue"),
+       bty = "n")
+```
+
+We can make use of the `summary` function to assess significance:
+
+```{r quadratic logit model significance, cache = TRUE}
+
+summary(quadratic_logit, corr = TRUE)
+```
+
+Hence the correlations between the coefficients are almost as strong as they can
+get. This happens because the correlation between `logdose` and `logdose^2` is
+very high:
+
+```{r logdose correlation}
+cor(beetle$logdose, beetle$logdose^2)
+```
+ 
+This correlation can be partly removed by centering `logdose`:
+
+```{r newdose correlation}
+newdose = (beetle$logdose - mean(beetle$logdose))
+cor(newdose, newdose^2)
+```
+
+If we use `newdose`, the correlation between the coefficients estimates nearly
+disappears:
+
+```{r quadratic logit model newdose}
+glm(formula = cbind(dead, n - dead) ~ newdose + I(newdose^2),
+    family = binomial(link = logit),
+    data = beetle) ->
+ quadratic_logit
+summary(quadratic_logit, corr = TRUE)
+```
+
+
+# A Probit Model
+
+We fit both linear and quadratic probit models.
+
+```{r quadratic probit model, cache = TRUE}
+
+glm(formula = cbind(dead, n - dead) ~ logdose,
+    family  = binomial(link = probit),
+    data    = beetle) ->
+  linear_probit
+
+glm(formula = cbind(dead, n - dead) ~ logdose + I(logdose^2),
+    family  = binomial(link = probit),
+    data    = beetle) ->
+  quadratic_probit
+```
+
+## Plot
+
+Here is a plot of all the models four models.
+
+```{r quadratic probit model plot, cache = TRUE}
+
+plot(x = beetle$logdose,
+     y = exp(predict(quadratic_logit))/(1 + exp(predict(quadratic_logit))), 
+     type = "b", 
+     col  = "blue", 
+     ylim = c(0, 1),
+     pch  = c(20),
+     xlab = "Log-dose",
+     ylab = "Probability of Death",
+     main = "Four binary response models.")
+
+lines(x    = beetle$logdose,,
+      y    = exp(predict(linear_logit))/(1 + exp(predict(linear_logit))), 
+      type = "b", 
+      pch  = c(20),
+      col  = "red")
+
+lines(x    = beetle$logdose,,
+      y    = pnorm(predict(linear_probit)),
+      type = "b", 
+      lty  = 2,
+      pch  = c(20),
+      col  = "black")
+
+lines(x    = beetle$logdose,,
+      y    = pnorm(predict(quadratic_probit)),
+      type = "b", 
+      lty  = 2,
+      pch  = c(20),
+      col  = "green")
+
+legend(x      = "topleft", 
+       legend = c("Linear logit", "Quadratic logit", 
+                  "Linear probit", "Quadratic probit"),
+       lty    = c(1, 1, 2, 2),
+       pch    = c(20, 20, 20, 20),
+       col    = c("red", "blue", "black", "green"),
+       bty    = "n")
+```
+
+## Log-likelihoods
+
+The log likelihoods can be computed using he `logLik` function.
+
+```{r likelihooods, cache = TRUE}
+models = list(linear_probit, quadratic_probit, linear_logit, quadratic_logit)
+unlist(lapply(models, logLik))
+```

@@ -1,0 +1,17 @@
+Code your own PCA class
+=======================
+
+- Code an own PCA class using what you have learned in the lecture
+- Use script named "Ch05 - exercise 01 - script.py" to see how it should work and what results you should get
+- Find the solution in file "myPCA.py"
+- Try to use the solution as little as possible, but use it when you get stuck
+- Use also the Juptyer notebook of chapter 05 for help: https://github.com/rasbt/python-machine-learning-book-3rd-edition/blob/master/ch05/ch05.ipynb
+
+About your PCA class
+--------------------
+- Your own PCA class should be stored in file "myPCA.py"
+- It should contain the following the following methods:
+	* __init__ (input parameter: n_components)
+	* fit (input parameter: X)
+	* transform (input paramter: X)
+	* get_cumulative_explained_variances (no input parameter)
